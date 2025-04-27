@@ -1,7 +1,3 @@
-/**
- * @author Luuxis
- * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0
- */
 // import panel
 import Login from './panels/login.js';
 import Home from './panels/home.js';
@@ -32,12 +28,14 @@ class Launcher {
     }
 
     initLog() {
-        document.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 73 || e.keyCode == 123) {
-                ipcRenderer.send('main-window-dev-tools-close');
-                ipcRenderer.send('main-window-dev-tools');
-            }
-        })
+        if (process.env.NODE_ENV === 'dev') {
+            document.addEventListener('keydown', e => {
+                if (e.ctrlKey && e.shiftKey && e.keyCode == 73 || e.keyCode == 123) {
+                    ipcRenderer.send('main-window-dev-tools-close');
+                    ipcRenderer.send('main-window-dev-tools');
+                }
+            })
+        }
         new logger(pkg.name, '#7289da')
     }
 

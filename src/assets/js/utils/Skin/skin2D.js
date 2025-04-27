@@ -1,7 +1,4 @@
-/**
- * @author Luuxis
- * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0
- */
+
 const nodeFetch = require('node-fetch')
 
 export class skin2D {

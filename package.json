@@ -1,20 +1,21 @@
 {
-    "name": "Selvania-Launcher",
-    "preductname": "Selvania Launcher",
-    "version": "2.0.7",
+    "name": "Jsp-MC Launcher",
+    "preductname": "Jsp-MC Launcher",
+    "version": "1.0.0",
     "description": "Launcher Mincraft pour le serveur Selvania",
     "main": "src/app.js",
     "author": {
-        "name": "luuxis, Inc.",
-        "email": "contact@luuxis.fr",
-        "url": "https://github.com/luuxis"
+        "name": "Kiz___",
+        "email": "Kiz___@jtheberg.cloud",
+        "url": "https://github.com/KizOFF"
     },
-    "url": "http://launcher.luuxis.fr",
+    "url": "http://api.jsp-mc.web.jtheberg.fr",
     "scripts": {
+        "try": "cross-env-shell electron .",
         "start": "cross-env-shell NODE_ENV=dev electron .",
-        "dev": "cross-env-shell DEV_TOOL=open nodemon --exec npm start",
+        "dev": "cross-env-shell NODE_ENV=dev nodemon --exec npm start",
         "build": "node build.js --obf=true --build=platform",
-        "icon": "node build.js --icon=https://raw.githubusercontent.com/luuxis/Selvania-Launcher/master/src/assets/images/icon.png"
+        "icon": "node build.js --icon=https://jsp-mc.sytes.net/storage/img/logo.jpg"
     },
     "license": "CCANC",
     "nodemonConfig": {
@@ -39,6 +40,6 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/luuxis/Selvania-Launcher.git"
+        "url": "git+https://github.com/kizYTB/JSP-MC-Launcher.git"
     }
 }

@@ -1,13 +1,8 @@
-/**
- * @author Luuxis
- * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0
- */
-
 const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
 const os = require("os");
 const pkg = require("../../../../package.json");
-let dev = process.env.DEV_TOOL === 'open';
+let dev = process.env.NODE_ENV === 'dev';
 let mainWindow = undefined;
 
 function getWindow() {

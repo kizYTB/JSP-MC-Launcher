@@ -1,8 +1,3 @@
-/**
- * @author Luuxis
- * @license CC-BY-NC 4.0 - https://creativecommons.org/licenses/by-nc/4.0
- */
-
 const { ipcRenderer, shell } = require('electron');
 const pkg = require('../package.json');
 const os = require('os');
@@ -30,9 +25,9 @@ class Splash {
 
     async startAnimation() {
         let splashes = [
-            { "message": "Je... vie...", "author": "Luuxis" },
-            { "message": "Salut je suis du code.", "author": "Luuxis" },
-            { "message": "Linux n'est pas un os, mais un kernel.", "author": "Luuxis" }
+            { "message": "Je suis une merde.", "author": "Hashnox" },
+            { "message": "Jsp ...", "author": "Kiz___" },
+            { "message": "Viens sur lhébergeur", "author": "https://Jtheberg.cloud" }
         ];
         let splash = splashes[Math.floor(Math.random() * splashes.length)];
         this.splashMessage.textContent = splash.message;
@@ -156,9 +151,12 @@ function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
 }
 
-document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 73 || e.keyCode == 123) {
-        ipcRenderer.send("update-window-dev-tools");
-    }
-})
+// Ajouter la condition pour les devTools uniquement en dev
+if (process.env.NODE_ENV === 'dev') {
+    document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 73 || e.keyCode == 123) {
+            ipcRenderer.send("update-window-dev-tools");
+        }
+    });
+}
 new Splash();
