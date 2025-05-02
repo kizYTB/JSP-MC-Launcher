@@ -1,8 +1,8 @@
 {
     "name": "jsp-mclauncher",
     "preductname": "Jsp-MC Launcher",
-    "version": "1.0.0",
-    "description": "Launcher Mincraft pour le serveur Selvania",
+    "version": "1.0.1",
+    "description": "Launcher Mincraft pour le serveur Jsp-mc",
     "main": "src/app.js",
     "author": {
         "name": "Kiz___",
