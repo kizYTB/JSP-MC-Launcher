@@ -1,4 +1,5 @@
 const fs = require("fs");
+const crypto = require('crypto');
 
 const builder = require('electron-builder')
 const JavaScriptObfuscator = require('javascript-obfuscator');
@@ -6,7 +7,7 @@ const nodeFetch = require('node-fetch')
 const png2icons = require('png2icons');
 const Jimp = require('jimp');
 
-const { preductname } = require('./package.json');
+const { preductname, url } = require('./package.json');
 
 class Index {
     async init() {
@@ -60,6 +61,21 @@ class Index {
 
     async buildPlatform() {
         await this.Obfuscate();
+        
+        // Fonction pour calculer le SHA512
+        const calculateSHA512 = (filePath) => {
+            const fileBuffer = fs.readFileSync(filePath);
+            const hashSum = crypto.createHash('sha512');
+            hashSum.update(fileBuffer);
+            return hashSum.digest('hex');
+        };
+
+        // Fonction pour obtenir la taille du fichier
+        const getFileSize = (filePath) => {
+            const stats = fs.statSync(filePath);
+            return stats.size;
+        };
+
         builder.build({
             config: {
                 generateUpdatesFilesForAllChannels: false,
@@ -73,8 +89,11 @@ class Index {
                 compression: 'maximum',
                 asar: true,
                 publish: [{
-                    provider: "github",
-                    releaseType: 'release',
+                    provider: "generic",
+                    url: `${url}/updates/`,
+                    releaseDate: new Date().toISOString(),
+                    sha512: (filePath) => calculateSHA512(filePath),
+                    size: (filePath) => getFileSize(filePath)
                 }],
                 win: {
                     icon: "./app/assets/images/icon.ico",
@@ -112,6 +131,29 @@ class Index {
             }
         }).then(() => {
             console.log('le build est terminé')
+
+            // Génération du latest.yml pour Windows
+            const pathWinExe = `dist/${preductname}-win-x64.exe`;
+            if (fs.existsSync(pathWinExe)) {
+                const sha512 = calculateSHA512(pathWinExe);
+                const size = getFileSize(pathWinExe);
+                const version = require('./package.json').version;
+                const releaseDate = new Date().toISOString();
+                const latestYml =
+`version: ${version}
+files:
+  - url: ${preductname}-win-x64.exe
+    sha512: ${sha512}
+    size: ${size}
+path: ${preductname}-win-x64.exe
+sha512: ${sha512}
+releaseDate: '${releaseDate}'
+`;
+                fs.writeFileSync('latest.yml', latestYml, 'utf8');
+                console.log('latest.yml généré !');
+            } else {
+                console.log('Fichier exe Windows non trouvé, latest.yml non généré.');
+            }
         }).catch(err => {
             console.error('Error during build!', err)
         })

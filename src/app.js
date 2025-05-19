@@ -1,7 +1,7 @@
-
 const { app, ipcMain, nativeTheme } = require('electron');
 const { Microsoft } = require('minecraft-java-core');
 const { autoUpdater } = require('electron-updater')
+const { url } = require('../package.json');
 
 const path = require('path');
 const fs = require('fs');
@@ -67,6 +67,12 @@ ipcMain.handle('is-dark-theme', (_, theme) => {
 })
 
 app.on('window-all-closed', () => app.quit());
+
+// Configuration de l'autoUpdater
+autoUpdater.setFeedURL({
+    provider: 'generic',
+    url: `${url}/updates/`
+});
 
 autoUpdater.autoDownload = false;
 
