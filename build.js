@@ -40,21 +40,24 @@ class Index {
 
             if (!fs.existsSync(folder)) fs.mkdirSync(folder, { recursive: true })
 
-            if (extFile == 'js') {
-                let code = fs.readFileSync(path, "utf8");
-                code = code.replace(/src\//g, 'app/');
-                if (this.obf) {
-                    await new Promise((resolve) => {
-                        console.log(`Obfuscate ${path}`);
-                        let obf = JavaScriptObfuscator.obfuscate(code, { optionsPreset: 'medium-obfuscation', disableConsoleOutput: false });
-                        resolve(fs.writeFileSync(`${folder}/${fileName}`, obf.getObfuscatedCode(), { encoding: "utf-8" }));
-                    })
+            // Vérifier si c'est un fichier et non un dossier
+            if (fs.statSync(path).isFile()) {
+                if (extFile == 'js') {
+                    let code = fs.readFileSync(path, "utf8");
+                    code = code.replace(/src\//g, 'app/');
+                    if (this.obf) {
+                        await new Promise((resolve) => {
+                            console.log(`Obfuscate ${path}`);
+                            let obf = JavaScriptObfuscator.obfuscate(code, { optionsPreset: 'medium-obfuscation', disableConsoleOutput: false });
+                            resolve(fs.writeFileSync(`${folder}/${fileName}`, obf.getObfuscatedCode(), { encoding: "utf-8" }));
+                        })
+                    } else {
+                        console.log(`Copy ${path}`);
+                        fs.writeFileSync(`${folder}/${fileName}`, code, { encoding: "utf-8" });
+                    }
                 } else {
-                    console.log(`Copy ${path}`);
-                    fs.writeFileSync(`${folder}/${fileName}`, code, { encoding: "utf-8" });
+                    fs.copyFileSync(path, `${folder}/${fileName}`);
                 }
-            } else {
-                fs.copyFileSync(path, `${folder}/${fileName}`);
             }
         }
     }
@@ -88,13 +91,11 @@ class Index {
                 directories: { "output": "dist" },
                 compression: 'maximum',
                 asar: true,
-                publish: [{
+                publish: {
                     provider: "generic",
                     url: `${url}/updates/`,
-                    releaseDate: new Date().toISOString(),
-                    sha512: (filePath) => calculateSHA512(filePath),
-                    size: (filePath) => getFileSize(filePath)
-                }],
+                    channel: "latest"
+                },
                 win: {
                     icon: "./app/assets/images/icon.ico",
                     target: [{
